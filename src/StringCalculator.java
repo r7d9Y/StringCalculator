@@ -100,7 +100,7 @@ public class StringCalculator {
 
             input = absolute(input);
 
-            input = clearPlusAndMinus1(input);
+            input = clearPlusAndMinus(input);
 
             input = factorial(input);
 
@@ -109,7 +109,7 @@ public class StringCalculator {
             input = multiplyDivideAndModulo(input);
             if (String.valueOf(input).equals(listOfErrors[7])) return listOfErrors[7];
 
-            input = clearPlusAndMinus2(input);
+            input = clearPlusAndMinus(input);
 
             input = addAndSubtract(input);
 
@@ -281,18 +281,6 @@ public class StringCalculator {
         return input;
     }
 
-    public static char[] clearPlusAndMinus1(char[] input) {
-        for (int j = 0; j < input.length - 1; j++) {
-            if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' && input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
-                StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, j)).append(((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+')) ? '+' : '-').append(Arrays.copyOfRange(input, j + 2, input.length)).toString().toCharArray();
-                j = 0;
-            }
-        }
-
-        return input;
-    }
-
     public static char[] factorial(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("!"); i++) {
             if (input[i] == '!') {
@@ -379,7 +367,7 @@ public class StringCalculator {
         return input;
     }
 
-    public static char[] clearPlusAndMinus2(char[] input) {
+    public static char[] clearPlusAndMinus(char[] input) {
         for (int j = 0; j < input.length - 1; j++) {
             if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' && input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
                 StringBuilder sb = new StringBuilder();
