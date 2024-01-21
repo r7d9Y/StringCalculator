@@ -1,20 +1,22 @@
 /**
  * The StringCalculator class is a simple calculator that can evaluate mathematical expressions
  * entered as strings. It supports basic arithmetic operations, trigonometric functions,
- * logarithms, factorials, and more.
+ * logarithms, factorials, and more
  *
  * @version 2.2
  * @author Rand7Y9Z@gmail.com
  * @since 2023
  */
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class StringCalculator {
 
     public static String programName = "StringCalculator";
-    public static double version = 2.3;
+    public static double version = 2.4;
     private static Scanner in = new Scanner(System.in);
 
 
@@ -113,9 +115,9 @@ public class StringCalculator {
 
             timeItRuns = System.currentTimeMillis() - time;
 
-            inp = String.valueOf(input);
+            if (String.valueOf(input).contains("Infinity")) return listOfErrors[3];
 
-            if (inp.contains("Infinity")) return listOfErrors[3];
+            inp = String.valueOf(roundDouble(Double.parseDouble(String.valueOf(input)),10));
 
             if (inp.charAt(0) == '+') inp = inp.substring(1);
 
@@ -540,6 +542,21 @@ public class StringCalculator {
             if (j > max) max = j;
         }
         return max;
+    }
+
+    /**
+     * this methode rounds double values
+     * it is used in order to avoid floating point errors
+     *
+     * @param value is the given value
+     * @param decimalPlaces is the number of decimal places there will be
+     * @return is value rounded to x (decimal places)
+     */
+    public static double roundDouble(double value, int decimalPlaces) {
+        BigDecimal bigDecimal = new BigDecimal(Double.toString(value));
+        bigDecimal = bigDecimal.setScale(decimalPlaces, RoundingMode.HALF_UP);
+
+        return bigDecimal.doubleValue();
     }
 
     /**
