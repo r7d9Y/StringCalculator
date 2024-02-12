@@ -68,6 +68,12 @@ public class StringCalculator {
 
     public static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow", "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated", "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found"};
 
+    /**
+     * Calculates the expression given as input
+     *
+     * @param inp The input expression as a String
+     * @return The result of the calculation as a String or an error message
+     */
     public static String doCalculate(String inp) {
         try {
             long time = System.currentTimeMillis();
@@ -130,15 +136,30 @@ public class StringCalculator {
         }
     }
 
+    /**
+     * Handles the expression within brackets
+     *
+     * @param s The expression within the brackets as a String
+     * @return The result of calculating the expression within the brackets as a String
+     */
     public static String bracketHandler(String s) {
         if (s.length() == 2) return "";
 
         return doCalculate(s.substring(1, s.length() - 1));
     }
 
+
+    /**
+     * Adds multiplication symbols if necessary
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with added multiplication symbols if necessary as a char array
+     */
     public static char[] addMultiplier(char[] input){
         for (int i = 0; i < input.length; i++) {
-            if (contains("0123456789".toCharArray(), input[i]) && (i < input.length - 1 && contains("(πlsct".toCharArray(), input[i + 1])) && (!contains("log".toCharArray(), input[max(new int[]{0, 1, 2, i - 3})]))) {
+            if (contains("0123456789".toCharArray(), input[i]) && (i < input.length - 1 &&
+                    contains("(πlsct".toCharArray(), input[i + 1])) &&
+                    (!contains("log".toCharArray(), input[max(new int[]{0, 1, 2, i - 3})]))) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i + 1)).append("*").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
                 i = 0;
@@ -152,24 +173,41 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Removes 'π' and 'e' and replaces them with their numerical values
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with numerical values for 'π' and 'e' as a char array
+     */
     public static char[] clearPiAndE(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("π"); i++) {
             if (input[i] == 'π') {
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, max(new int[]{i, 0}))).append("3.141592653589793").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, max(new int[]{i, 0})))
+                        .append("3.141592653589793").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
             }
         }
 
         for (int i = 0, j = 0; i < input.length && j < 1000 && (Arrays.toString(input).contains("E") || Arrays.toString(input).contains("e")); i++, j++) {
             if (input[i] == 'e' || input[i] == 'E') {
                 StringBuilder sb = new StringBuilder();
-                input = ("0123456789".contains(String.valueOf(input[i == 0 ? 0 : i - 1])) ? sb.append(Arrays.copyOfRange(input, 0, i)).append("*10^" + ("0123456789-".contains(String.valueOf(input[i + (i + 1 < input.length ? 0 : 1)])) ? "" : "1")).append(Arrays.copyOfRange(input, i + 1, input.length)) : sb.append(Arrays.copyOfRange(input, 0, i)).append("10^" + ("0123456789-".contains(String.valueOf(input[i + (i + 1 < input.length ? 0 : 1)])) ? "" : "1")).append(Arrays.copyOfRange(input, i + 1, input.length))).toString().toCharArray();
+                input = ("0123456789".contains(String.valueOf(input[i == 0 ? 0 : i - 1])) ? sb.append(Arrays.copyOfRange(input, 0, i))
+                        .append("*10^" + ("0123456789-".contains(String.valueOf(input[i + (i + 1 < input.length ? 0 : 1)])) ? "1" : ""))
+                        .append(Arrays.copyOfRange(input, i + 1, input.length)) : sb.append(Arrays.copyOfRange(input, 0, i))
+                        .append("10^" + ("0123456789-".contains(String.valueOf(input[i + (i + 1 < input.length ? 0 : 1)])) ? "" : "1"))
+                        .append(Arrays.copyOfRange(input, i + 1, input.length))).toString().toCharArray();
             }
         }
 
         return input;
     }
 
+    /**
+     * Performs calculations for roots
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated roots as a char array
+     */
     public static char[] doRoots(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("√"); i++) {
             if (input[i] == '√') {
@@ -192,13 +230,21 @@ public class StringCalculator {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1)).append(String.valueOf(root(Double.parseDouble(bracketHandler(s.toString())), Double.parseDouble(reverse(t.toString())))).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                        .append(String.valueOf(root(Double.parseDouble(bracketHandler(s.toString())), Double.parseDouble(reverse(t.toString())))).toCharArray())
+                        .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
             }
         }
 
         return input;
     }
 
+    /**
+     * Performs calculations for logarithms
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated logarithms as a char array
+     */
     public static char[] doLogarithm(char[] input) {
         for (int i = 0; i < input.length - 2; i++) {
             if (input[i] == 'l' && input[i + 1] == 'o' && input[i + 2] == 'g') {
@@ -216,13 +262,20 @@ public class StringCalculator {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(log(Double.parseDouble(s.toString()), Double.parseDouble(bracketHandler(t.toString())))).toCharArray()).append(Arrays.copyOfRange(input, i + k, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(log(Double.parseDouble(s.toString()), Double.parseDouble(bracketHandler(t.toString())))).toCharArray())
+                        .append(Arrays.copyOfRange(input, i + k, input.length)).toString().toCharArray();
             }
         }
 
         return input;
     }
 
+    /**
+     * Performs calculations for sine, cosine, and tangent
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated trigonometric functions as a char array
+     */
     public static char[] doCosSinTan(char[] input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == 's' || input[i] == 'c' || input[i] == 't') {
@@ -235,11 +288,17 @@ public class StringCalculator {
                 StringBuilder sb = new StringBuilder();
                 switch (input[i]) {
                     case 's' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(sinus(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                            input = sb.append(Arrays.copyOfRange(input, 0, i))
+                                    .append(String.valueOf(sinus(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
+                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     case 'c' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(cosinus(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                            input = sb.append(Arrays.copyOfRange(input, 0, i))
+                                    .append(String.valueOf(cosinus(Double.parseDouble(bracketHandler(s.toString())), isDEG))
+                                            .toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     case 't' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(tangens(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                            input = sb.append(Arrays.copyOfRange(input, 0, i))
+                                    .append(String.valueOf(tangens(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
+                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 }
             }
         }
@@ -247,6 +306,12 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Handles brackets in the expression
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with handled brackets as a char array
+     */
     public static char[] clearBracket(char[] input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '(') {
@@ -265,6 +330,12 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Calculates the absolute value
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated absolute value as a char array
+     */
     public static char[] absolute(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("|"); i++) {
             if (input[i] == '|') {
@@ -275,12 +346,20 @@ public class StringCalculator {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(abs(Double.parseDouble(doCalculate(s.toString())))).toCharArray()).append(Arrays.copyOfRange(input, i + j + 1, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, i))
+                        .append(String.valueOf(abs(Double.parseDouble(doCalculate(s.toString())))).toCharArray())
+                        .append(Arrays.copyOfRange(input, i + j + 1, input.length)).toString().toCharArray();
             }
         }
         return input;
     }
 
+    /**
+     * Calculates factorials
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated factorials as a char array
+     */
     public static char[] factorial(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("!"); i++) {
             if (input[i] == '!') {
@@ -299,6 +378,12 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Performs exponentiation
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated exponentiation as a char array
+     */
     public static char[] potentiate(char[] input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("^"); i++) {
             if (input[i] == '^') {
@@ -319,7 +404,9 @@ public class StringCalculator {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1)).append(String.valueOf(Math.pow(Double.parseDouble(reverse(t.toString())), Double.parseDouble(s.toString()))).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                        .append(String.valueOf(Math.pow(Double.parseDouble(reverse(t.toString())), Double.parseDouble(s.toString()))).toCharArray())
+                        .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 i = 0;
             }
         }
@@ -327,6 +414,12 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Performs multiplication, division, and modulo operations
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated multiplication, division, and modulo operations as a char array
+     */
     public static char[] multiplyDivideAndModulo(char[] input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '*' || input[i] == '/' || input[i] == '%') {
@@ -349,15 +442,21 @@ public class StringCalculator {
                 StringBuilder sb = new StringBuilder();
                 switch (input[i]) {
                     case '*' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1)).append(String.valueOf(Double.parseDouble(reverse(t.toString())) * Double.parseDouble(s.toString())).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                                    .append(String.valueOf(Double.parseDouble(reverse(t.toString())) * Double.parseDouble(s.toString())).toCharArray())
+                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     case '/' -> {
                         if (Double.parseDouble(s.toString()) == 0) {
                             return listOfErrors[7].toCharArray();
                         }
-                        input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1)).append(String.valueOf(Double.parseDouble(reverse(t.toString())) / Double.parseDouble(s.toString())).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                        input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                                .append(String.valueOf(Double.parseDouble(reverse(t.toString())) / Double.parseDouble(s.toString())).toCharArray())
+                                .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     }
                     case '%' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1)).append(String.valueOf(Double.parseDouble(reverse(t.toString())) % Double.parseDouble(s.toString())).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                                    .append(String.valueOf(Double.parseDouble(reverse(t.toString())) % Double.parseDouble(s.toString())).toCharArray()).
+                                    append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 }
                 i = 0;
             }
@@ -367,6 +466,12 @@ public class StringCalculator {
         return input;
     }
 
+    /**
+     * Removes consecutive plus and minus signs
+     *
+     * @param input The input expression as a char array
+     * @return The input expression without consecutive plus and minus signs as a char array
+     */
     public static char[] clearPlusAndMinus(char[] input) {
         for (int j = 0; j < input.length - 1; j++) {
             if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' && input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
@@ -378,6 +483,13 @@ public class StringCalculator {
         return input;
     }
 
+
+    /**
+     * Performs addition and subtraction
+     *
+     * @param input The input expression as a char array
+     * @return The input expression with calculated addition and subtraction as a char array
+     */
     public static char[] addAndSubtract(char[] input) {
         for (int i = 0; i < input.length && (String.valueOf(input).contains("+") || String.valueOf(input).contains("-")); i++) {
             if ((input[i] == '+' || (input[i] == '-' && i >= 1 && (input[i - 1] != 'E' && input[i - 1] != 'e'))) && i != 0) {
