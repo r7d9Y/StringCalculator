@@ -16,13 +16,14 @@ import java.util.Scanner;
 public class StringCalculator {
 
     public static String programName = "StringCalculator";
-    public static double version = 2.4;
+    public static double version = 2.5;
     private static Scanner in = new Scanner(System.in);
 
 
     public static void main(String[] args) {
 
-        System.out.println("\n" + programName + " " + version + " (2023) \nFor more info write: show -info\n------------------------------------------------------------------------------------------------------------");
+        System.out.println("\n" + programName + " " + version + " (2023) \nFor more info write: show -info" +
+                "\n-------------------------------------------------------------------------------------------------------");
         while (true) {
             System.out.print("\nEnter an input String:");
             String input = in.nextLine();
@@ -41,7 +42,7 @@ public class StringCalculator {
                 isDEG = false;
             } else if (input.equalsIgnoreCase("Deg")) {
                 isDEG = true;
-            } else if (input.equalsIgnoreCase("end")) {
+            } else if (input.equalsIgnoreCase("end") || input.equalsIgnoreCase("close")) {
                 System.out.println("Program closed");
                 break;
             } else {
@@ -53,7 +54,13 @@ public class StringCalculator {
     }
 
     public static String[] commands = new String[]{"-mode", "-commands", "-info", "-trigonometric_functions", "-contact"};
-    public static String[] infos = new String[]{"", "'show -commands'\n'show -info'\n'show -trigonometric_functions'\n'show -mode'\n'show -contact'\n'end'\n'deg' & 'rad'", "\nThis program allows you to enter a String and it calculates the mathematical value of it.\nFor a list of possible commands, type 'show - commands', to close the programm type 'end'. \nHere is a list of symbols/characters it can Handle:\n \n1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,\n( ), | |,\n+, -, *, /, %, !, √(), ^,\nsin(), cos(), tan(), logx()\nE, e \n\nPlease note that if you want to use a root besides the square root, you have to type the needed root before the root symbol e.g. 3√(27) would be the cubic root of 27. \nIf you want to know more about the use of trigonometric functions, please enter 'show -trigonometric_functions'", "\nIf you want to change from deg to rad (or reverse), type 'rad' or 'deg'. The default setting is DEG.\nAnything to gets to be calculated by one of the trigonometric functions has to be within the brackets e.g. sin(60)", "Rand7Y9Z@gmail.com"};
+    public static String[] infos = new String[]{"", "'show -commands'\n'show -info'\n'show -trigonometric_functions'\n'show -mode'\n'show -contact'\n'end'\n'deg' & 'rad'",
+            "\nThis program allows you to enter a String and it calculates the mathematical value of it.\nFor a list of possible commands, type 'show - commands', to close the programm type 'end'. " +
+                    "\nHere is a list of symbols/characters it can Handle:\n \n1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,\n( ), | |,\n+, -, *, /, %, !, √(), ^,\nsin(), cos(), tan(), logx()\nE, e " +
+                    "\n\nPlease note that if you want to use a root besides the square root, you have to type the needed root before the root symbol e.g. 3√(27) would be the cubic root of 27." +
+                    " \nIf you want to know more about the use of trigonometric functions, please enter 'show -trigonometric_functions'",
+            "\nIf you want to change from deg to rad (or reverse), type 'rad' or 'deg'. The default setting is DEG." +
+                    "\nAnything to gets to be calculated by one of the trigonometric functions has to be within the brackets e.g. sin(60)", "Rand7Y9Z@gmail.com"};
 
 
     /**
@@ -66,7 +73,9 @@ public class StringCalculator {
      */
     public static long timeItRuns = 0;
 
-    public static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow", "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated", "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found"};
+    public static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
+            "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated",
+            "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found"};
 
     /**
      * Calculates the expression given as input
@@ -136,6 +145,7 @@ public class StringCalculator {
         }
     }
 
+
     /**
      * Handles the expression within brackets
      *
@@ -173,6 +183,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Removes 'π' and 'e' and replaces them with their numerical values
      *
@@ -201,6 +212,7 @@ public class StringCalculator {
 
         return input;
     }
+
 
     /**
      * Performs calculations for roots
@@ -239,6 +251,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Performs calculations for logarithms
      *
@@ -269,6 +282,7 @@ public class StringCalculator {
 
         return input;
     }
+
 
     /**
      * Performs calculations for sine, cosine, and tangent
@@ -306,6 +320,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Handles brackets in the expression
      *
@@ -329,6 +344,7 @@ public class StringCalculator {
 
         return input;
     }
+
 
     /**
      * Calculates the absolute value
@@ -354,6 +370,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Calculates factorials
      *
@@ -377,6 +394,7 @@ public class StringCalculator {
 
         return input;
     }
+
 
     /**
      * Performs exponentiation
@@ -414,6 +432,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Performs multiplication, division, and modulo operations
      *
@@ -426,7 +445,8 @@ public class StringCalculator {
 
                 StringBuilder s = new StringBuilder();
                 int j = 1;
-                for (; ((i + j < input.length && "0123456789.Ee".contains(String.valueOf(input[i + j]))) || (j == 1 && input[i + 1] == '-')) || ((input[i + j - 1] == 'E' || input[i + j - 1] == 'e') && input[i + j] == '-'); j++) {
+                for (; ((i + j < input.length && "0123456789.Ee".contains(String.valueOf(input[i + j]))) ||
+                        (j == 1 && input[i + 1] == '-')) || ((input[i + j - 1] == 'E' || input[i + j - 1] == 'e') && input[i + j] == '-'); j++) {
                     s.append(input[i + j]);
                 }
 
@@ -466,6 +486,7 @@ public class StringCalculator {
         return input;
     }
 
+
     /**
      * Removes consecutive plus and minus signs
      *
@@ -474,9 +495,11 @@ public class StringCalculator {
      */
     public static char[] clearPlusAndMinus(char[] input) {
         for (int j = 0; j < input.length - 1; j++) {
-            if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' && input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
+            if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' &&
+                    input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, j)).append(((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+')) ? '+' : '-').append(Arrays.copyOfRange(input, j + 2, input.length)).toString().toCharArray();
+                input = sb.append(Arrays.copyOfRange(input, 0, j)).append(((input[j] == '-' && input[j + 1] == '-') ||
+                        (input[j] == '+' && input[j + 1] == '+')) ? '+' : '-').append(Arrays.copyOfRange(input, j + 2, input.length)).toString().toCharArray();
                 j = 0;
             }
         }
@@ -495,13 +518,15 @@ public class StringCalculator {
             if ((input[i] == '+' || (input[i] == '-' && i >= 1 && (input[i - 1] != 'E' && input[i - 1] != 'e'))) && i != 0) {
                 StringBuilder s = new StringBuilder();
                 int j = 1;
-                for (; i + j < input.length && ("0123456789.Ee".contains(String.valueOf(input[i + j])) || ((input[i + j - 1] == 'E' || input[i + j - 1] == 'e') && input[i + j] == '-')); j++) {
+                for (; i + j < input.length && ("0123456789.Ee".contains(String.valueOf(input[i + j])) ||
+                        ((input[i + j - 1] == 'E' || input[i + j - 1] == 'e') && input[i + j] == '-')); j++) {
                     s.append(input[i + j]);
                 }
 
                 StringBuilder t = new StringBuilder();
                 int k = 1;
-                for (; i - k >= 0 && ("0123456789.Ee".contains(String.valueOf(input[i - k])) || (input[i - k] == '-' && i - k >= 1 && (input[i - k - 1] == 'E' || input[i - k - 1] == 'e'))); k++) {
+                for (; i - k >= 0 && ("0123456789.Ee".contains(String.valueOf(input[i - k])) ||
+                        (input[i - k] == '-' && i - k >= 1 && (input[i - k - 1] == 'E' || input[i - k - 1] == 'e'))); k++) {
                     t.append(input[i - k]);
                 }
 
@@ -511,7 +536,8 @@ public class StringCalculator {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i - t.length())).append(String.valueOf(input[i] == '+' ?
                         Double.parseDouble(reverse(t.toString())) + Double.parseDouble(s.toString()) :
-                        Double.parseDouble(reverse(t.toString())) - Double.parseDouble(s.toString())).toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                        Double.parseDouble(reverse(t.toString())) - Double.parseDouble(s.toString())).toCharArray())
+                        .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 i = 0;
             }
         }
