@@ -6,6 +6,8 @@
  * @version 2.2
  * @author Rand7Y9Z@gmail.com
  * @since 2023
+ * <p>
+ * please note: javadoc is partially written by GPT for a more understandable code
  */
 
 import java.math.BigDecimal;
@@ -75,13 +77,14 @@ public class StringCalculator {
 
     public static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
             "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated",
-            "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found"};
+            "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found", "Error: no number to potentiate found"};
 
     /**
      * Calculates the expression given as input
      *
      * @param inp The input expression as a String
-     * @return The result of the calculation as a String or an error message
+     * @return The result of the calculation as a String or an error message (the possible ones are found in String[] listOfErrors,
+     *         they should be self explaining)
      */
     public static String doCalculate(String inp) {
         try {
@@ -91,6 +94,9 @@ public class StringCalculator {
             inp = remove(inp, ' ');
             inp = remove(inp, '"');
 
+            inp = doReplaceThings(inp);
+            if(inp.equals(listOfErrors[9])) return listOfErrors[9];
+
             if (countInstances(inp, '(') != countInstances(inp, ')')) return listOfErrors[1];
 
             if (countInstances(inp, '|') % 2 == 1) return listOfErrors[8];
@@ -98,7 +104,8 @@ public class StringCalculator {
             char[] input = inp.toCharArray();
 
             for (int i = 0; i < input.length; i++) {
-                if (input[i] == '!' && (i == 0 || !contains("0123456789".toCharArray(), input[i - 1]))) return listOfErrors[6];
+                if (input[i] == '!' && (i == 0 || !contains("0123456789".toCharArray(), input[i - 1])))
+                    return listOfErrors[6];
             }
 
             input = addMultiplier(input);
@@ -132,7 +139,7 @@ public class StringCalculator {
 
             if (String.valueOf(input).contains("Infinity")) return listOfErrors[3];
 
-            inp = String.valueOf(roundDouble(Double.parseDouble(String.valueOf(input)),10));
+            inp = String.valueOf(roundDouble(Double.parseDouble(String.valueOf(input)), 10));
 
             if (inp.charAt(0) == '+') inp = inp.substring(1);
 
@@ -143,6 +150,35 @@ public class StringCalculator {
         } catch (Exception e) {
             return listOfErrors[5];
         }
+    }
+
+    public static String doReplaceThings(String s) {
+        s = replace(s, '∛', "3√");
+        s = replace(s, '∜', "4√");
+        s = replace(s, '×', "*");
+        s = replace(s, '÷', "/");
+        s = replace(s, '–', "-");
+        s = replace(s, '–', "-");
+        s = replace(s, '⅖', "2/3");
+        s = replace(s, '¾', "3/4");
+        s = replace(s, '⅗', "3/5");
+        s = replace(s, '⅜', "3/8");
+        s = replace(s, '⅘', "4/5");
+        s = replace(s, '⅚', "5/6");
+        s = replace(s, '⅝', "5/8");
+        s = replace(s, '⅞', "7/8");
+        char[] potentiateDigits = new char[]{'⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'};
+
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < potentiateDigits.length; j++) {
+                if (s.charAt(i) == potentiateDigits[j]) {
+                    if(i == 0) return listOfErrors[9];
+                    s = s.substring(0, i) + "^" + j + s.substring(i+1);
+                }
+            }
+        }
+        
+        return s;
     }
 
 
@@ -165,7 +201,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with added multiplication symbols if necessary as a char array
      */
-    public static char[] addMultiplier(char[] input){
+    public static char[] addMultiplier(char[] input) {
         for (int i = 0; i < input.length; i++) {
             if (contains("0123456789".toCharArray(), input[i]) && (i < input.length - 1 &&
                     contains("(πlsct".toCharArray(), input[i + 1])) &&
@@ -225,7 +261,9 @@ public class StringCalculator {
             if (input[i] == '√') {
                 if (i == 0 || !"0123456789".contains(String.valueOf(input[i - 1]))) {
                     StringBuilder sb = new StringBuilder();
-                    input = sb.append(Arrays.copyOfRange(input, 0, i)).append("2").append(Arrays.copyOfRange(input, i, input.length)).toString().toCharArray();
+                    input = sb.append(Arrays.copyOfRange(input, 0, i))
+                            .append("2").append(Arrays.copyOfRange(input, i, input.length))
+                            .toString().toCharArray();
                     i++;
                 }
 
@@ -243,7 +281,8 @@ public class StringCalculator {
 
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
-                        .append(String.valueOf(root(Double.parseDouble(bracketHandler(s.toString())), Double.parseDouble(reverse(t.toString())))).toCharArray())
+                        .append(String.valueOf(root(Double.parseDouble(bracketHandler(s.toString())), Double.parseDouble(reverse(t.toString()))))
+                                .toCharArray())
                         .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
             }
         }
@@ -275,7 +314,9 @@ public class StringCalculator {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, i)).append(String.valueOf(log(Double.parseDouble(s.toString()), Double.parseDouble(bracketHandler(t.toString())))).toCharArray())
+                input = sb.append(Arrays.copyOfRange(input, 0, i))
+                        .append(String.valueOf(log(Double.parseDouble(s.toString()), Double.parseDouble(bracketHandler(t.toString()))))
+                                .toCharArray())
                         .append(Arrays.copyOfRange(input, i + k, input.length)).toString().toCharArray();
             }
         }
@@ -301,18 +342,15 @@ public class StringCalculator {
 
                 StringBuilder sb = new StringBuilder();
                 switch (input[i]) {
-                    case 's' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i))
-                                    .append(String.valueOf(sinus(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
-                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
-                    case 'c' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i))
-                                    .append(String.valueOf(cosinus(Double.parseDouble(bracketHandler(s.toString())), isDEG))
-                                            .toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
-                    case 't' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i))
-                                    .append(String.valueOf(tangens(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
-                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                    case 's' -> input = sb.append(Arrays.copyOfRange(input, 0, i))
+                            .append(String.valueOf(sinus(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
+                            .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                    case 'c' -> input = sb.append(Arrays.copyOfRange(input, 0, i))
+                            .append(String.valueOf(cosinus(Double.parseDouble(bracketHandler(s.toString())), isDEG))
+                                    .toCharArray()).append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                    case 't' -> input = sb.append(Arrays.copyOfRange(input, 0, i))
+                            .append(String.valueOf(tangens(Double.parseDouble(bracketHandler(s.toString())), isDEG)).toCharArray())
+                            .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 }
             }
         }
@@ -461,10 +499,9 @@ public class StringCalculator {
 
                 StringBuilder sb = new StringBuilder();
                 switch (input[i]) {
-                    case '*' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
-                                    .append(String.valueOf(Double.parseDouble(reverse(t.toString())) * Double.parseDouble(s.toString())).toCharArray())
-                                    .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                    case '*' -> input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                            .append(String.valueOf(Double.parseDouble(reverse(t.toString())) * Double.parseDouble(s.toString())).toCharArray())
+                            .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     case '/' -> {
                         if (Double.parseDouble(s.toString()) == 0) {
                             return listOfErrors[7].toCharArray();
@@ -473,10 +510,9 @@ public class StringCalculator {
                                 .append(String.valueOf(Double.parseDouble(reverse(t.toString())) / Double.parseDouble(s.toString())).toCharArray())
                                 .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                     }
-                    case '%' ->
-                            input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
-                                    .append(String.valueOf(Double.parseDouble(reverse(t.toString())) % Double.parseDouble(s.toString())).toCharArray()).
-                                    append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
+                    case '%' -> input = sb.append(Arrays.copyOfRange(input, 0, i - k + 1))
+                            .append(String.valueOf(Double.parseDouble(reverse(t.toString())) % Double.parseDouble(s.toString())).toCharArray()).
+                            append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 }
                 i = 0;
             }
@@ -535,8 +571,8 @@ public class StringCalculator {
 
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i - t.length())).append(String.valueOf(input[i] == '+' ?
-                        Double.parseDouble(reverse(t.toString())) + Double.parseDouble(s.toString()) :
-                        Double.parseDouble(reverse(t.toString())) - Double.parseDouble(s.toString())).toCharArray())
+                                Double.parseDouble(reverse(t.toString())) + Double.parseDouble(s.toString()) :
+                                Double.parseDouble(reverse(t.toString())) - Double.parseDouble(s.toString())).toCharArray())
                         .append(Arrays.copyOfRange(input, i + j, input.length)).toString().toCharArray();
                 i = 0;
             }
@@ -674,7 +710,7 @@ public class StringCalculator {
      * this methode rounds double values
      * it is used in order to avoid floating point errors
      *
-     * @param value is the given value
+     * @param value         is the given value
      * @param decimalPlaces is the number of decimal places there will be
      * @return is value rounded to x (decimal places)
      */
@@ -742,5 +778,22 @@ public class StringCalculator {
         }
         return false;
     }
+
+    /**
+     * Replaces all occurrences of a specified character in a given string with a replacement string
+     *
+     * @param s The input string in which the specified character will be replaced
+     * @param exclude The character to be replaced in the input string
+     * @param replacement The string to replace the specified character with
+     * @return A new string with all occurrences of the specified character replaced by the replacement string
+     */
+    public static String replace(String s, char exclude, String replacement) {
+        StringBuilder r = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            r.append((s.charAt(i) == exclude) ? replacement : s.charAt(i));
+        }
+        return r.toString();
+    }
+
 
 }
