@@ -152,6 +152,13 @@ public class StringCalculator {
         }
     }
 
+    /**
+     * Replaces special characters in a given string with their corresponding mathematical expressions,
+     * and converts potentiation characters to a format compatible with the potentiate operator (^)
+     *
+     * @param s The input string to process
+     * @return The modified string with replaced characters and converted potentiation format
+     */
     public static String doReplaceThings(String s) {
         s = replace(s, '∛', "3√");
         s = replace(s, '∜', "4√");
@@ -177,7 +184,7 @@ public class StringCalculator {
                 }
             }
         }
-        
+
         return s;
     }
 
