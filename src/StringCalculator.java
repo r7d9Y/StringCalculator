@@ -6,7 +6,7 @@
  * @version 2.2
  * @author Rand7Y9Z@gmail.com
  * @since 2023
- * <p>
+ * 
  * please note: javadoc is partially written by GPT for a more understandable code
  */
 
