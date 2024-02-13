@@ -56,14 +56,32 @@ public class StringCalculator {
     }
 
     public static String[] commands = new String[]{"-mode", "-commands", "-info", "-trigonometric_functions", "-contact"};
-    public static String[] infos = new String[]{"", "'show -commands'\n'show -info'\n'show -trigonometric_functions'\n'show -mode'\n'show -contact'\n'end'\n'deg' & 'rad'",
-            "\nThis program allows you to enter a String and it calculates the mathematical value of it.\nFor a list of possible commands, type 'show - commands', to close the programm type 'end'. " +
-                    "\nHere is a list of symbols/characters it can Handle:\n \n1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,\n( ), | |,\n+, -, *, /, %, !, √(), ^,\nsin(), cos(), tan(), logx()\nE, e " +
-                    "\n\nPlease note that if you want to use a root besides the square root, you have to type the needed root before the root symbol e.g. 3√(27) would be the cubic root of 27." +
-                    " \nIf you want to know more about the use of trigonometric functions, please enter 'show -trigonometric_functions'",
-            "\nIf you want to change from deg to rad (or reverse), type 'rad' or 'deg'. The default setting is DEG." +
-                    "\nAnything to gets to be calculated by one of the trigonometric functions has to be within the brackets e.g. sin(60)", "Rand7Y9Z@gmail.com"};
-
+    public static String[] infos = new String[]{
+            "",
+            "'show -commands'\n'show -info'\n'show -trigonometric_functions'\n'show -mode'\n'show -contact'\n'end'\n'deg' & 'rad'",
+            """
+    This program allows you to enter a String and it calculates the mathematical value of it
+    For a list of possible commands, type 'show - commands', to close the programm type 'end'
+    Here is a list of symbols/characters it can Handle:
+     
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,
+    ( ), | |,
+    +, -, *, / (or: ÷), %, ^, !, x√(),∛, ∜ 
+    ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ (potentiate symbols)
+    sin(), cos(), tan(), logx()
+    E, e 
+    ⅖ ¾ ⅗ ⅜ ⅘ ⅚ ⅝ ⅞ ( these symbols get converted to divisions afterwards)
+    
+    Please note that if you want to use a root besides the square root,
+    you have to type the needed root before the root symbol e.g. 3√(27) would be the cubic root of 27
+    If you want to know more about the use of trigonometric functions, please enter 'show -trigonometric_functions'
+    """,
+            """
+    If you want to change from deg to rad (or reverse), type 'rad' or 'deg'. The default setting is DEG.
+    Anything to gets to be calculated by one of the trigonometric functions has to be within the brackets e.g. sin(60)
+    """,
+            "Rand7Y9Z@gmail.com"
+    };
 
     /**
      * The current mode indicating whether trigonometric functions operate in degrees or radians
