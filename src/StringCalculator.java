@@ -6,7 +6,7 @@
  * @version 2.2
  * @author Rand7Y9Z@gmail.com
  * @since 2023
- * 
+ *
  * please note: javadoc is partially written by GPT for a more understandable code
  */
 
@@ -113,7 +113,7 @@ public class StringCalculator {
             inp = remove(inp, '"');
 
             inp = doReplaceThings(inp);
-            if(inp.equals(listOfErrors[9])) return listOfErrors[9];
+            if (inp.equals(listOfErrors[9])) return listOfErrors[9];
 
             if (countInstances(inp, '(') != countInstances(inp, ')')) return listOfErrors[1];
 
@@ -172,33 +172,27 @@ public class StringCalculator {
 
     /**
      * Replaces special characters in a given string with their corresponding mathematical expressions,
-     * and converts potentiation characters to a format compatible with the potentiate operator (^)
+     * and converts potential characters to a format compatible with the potentiate operator (^)
      *
      * @param s The input string to process
-     * @return The modified string with replaced characters and converted potentiation format
+     * @return The modified string with replaced characters and converted potential format
      */
     public static String doReplaceThings(String s) {
-        s = replace(s, '∛', "3√");
-        s = replace(s, '∜', "4√");
-        s = replace(s, '×', "*");
-        s = replace(s, '÷', "/");
-        s = replace(s, '–', "-");
-        s = replace(s, '–', "-");
-        s = replace(s, '⅖', "2/3");
-        s = replace(s, '¾', "3/4");
-        s = replace(s, '⅗', "3/5");
-        s = replace(s, '⅜', "3/8");
-        s = replace(s, '⅘', "4/5");
-        s = replace(s, '⅚', "5/6");
-        s = replace(s, '⅝', "5/8");
-        s = replace(s, '⅞', "7/8");
+
+        char[] searchChars = {'∛', '∜', '×', '÷', '–', '–', '⅖', '¾', '⅗', '⅜', '⅘', '⅚', '⅝', '⅞'};
+        String[] replacements = {"3√", "4√", "*", "/", "-", "-", "2/3", "3/4", "3/5", "3/8", "4/5", "5/6", "5/8", "7/8"};
+
+        for (int j = 0; j < searchChars.length; j++) {
+            s = replace(s, searchChars[j], replacements[j]);
+        }
+
         char[] potentiateDigits = new char[]{'⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'};
 
         for (int i = 0; i < s.length(); i++) {
             for (int j = 0; j < potentiateDigits.length; j++) {
                 if (s.charAt(i) == potentiateDigits[j]) {
-                    if(i == 0) return listOfErrors[9];
-                    s = s.substring(0, i) + "^" + j + s.substring(i+1);
+                    if (i == 0) return listOfErrors[9];
+                    s = s.substring(0, i) + "^" + j + s.substring(i + 1);
                 }
             }
         }
