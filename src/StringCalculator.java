@@ -180,7 +180,9 @@ public class StringCalculator {
     public static String doReplaceThings(String s) {
 
         char[] searchChars = {'∛', '∜', '×', '÷', '–', '–', '⅖', '¾', '⅗', '⅜', '⅘', '⅚', '⅝', '⅞'};
-        String[] replacements = {"3√", "4√", "*", "/", "-", "-", "2/3", "3/4", "3/5", "3/8", "4/5", "5/6", "5/8", "7/8"};
+        String[] replacements = {"3√", "4√", "*", "/", "-", "-", String.valueOf(2/3), String.valueOf(3/4),
+                String.valueOf(3/5),String.valueOf(3/8), String.valueOf(4/5), String.valueOf(5/6),
+                String.valueOf(5/8),String.valueOf(7/8)};
 
         for (int j = 0; j < searchChars.length; j++) {
             s = replace(s, searchChars[j], replacements[j]);
