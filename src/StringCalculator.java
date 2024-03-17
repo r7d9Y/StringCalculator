@@ -1,12 +1,12 @@
 /**
- * The StringCalculator class is a simple calculator that can evaluate mathematical expressions
+ * The StringCalculator is a simple calculator that can evaluate mathematical expressions
  * entered as strings. It supports basic arithmetic operations, trigonometric functions,
  * logarithms, factorials, and more
  *
  * @version 2.2
  * @author Rand7Y9Z@gmail.com
  * @since 2023
- *
+ * <p>
  * please note: javadoc is partially written by GPT for a more understandable code
  */
 
@@ -102,7 +102,7 @@ public class StringCalculator {
      *
      * @param inp The input expression as a String
      * @return The result of the calculation as a String or an error message (the possible ones are found in String[] listOfErrors,
-     *         they should be self explaining)
+     * they should be self explaining)
      */
     public static String doCalculate(String inp) {
         try {
@@ -111,6 +111,7 @@ public class StringCalculator {
             inp = remove(inp, '_');
             inp = remove(inp, ' ');
             inp = remove(inp, '"');
+            //inp = replace(inp,',',".");
 
             inp = doReplaceThings(inp);
             if (inp.equals(listOfErrors[9])) return listOfErrors[9];
@@ -180,9 +181,9 @@ public class StringCalculator {
     public static String doReplaceThings(String s) {
 
         char[] searchChars = {'∛', '∜', '×', '÷', '–', '–', '⅖', '¾', '⅗', '⅜', '⅘', '⅚', '⅝', '⅞'};
-        String[] replacements = {"3√", "4√", "*", "/", "-", "-", String.valueOf(2/3), String.valueOf(3/4),
-                String.valueOf(3/5),String.valueOf(3/8), String.valueOf(4/5), String.valueOf(5/6),
-                String.valueOf(5/8),String.valueOf(7/8)};
+        String[] replacements = {"3√", "4√", "*", "/", "-", "-", String.valueOf((double) 2 / 3), String.valueOf((double) 3 / 4),
+                String.valueOf((double) 3 / 5), String.valueOf((double) 3 / 8), String.valueOf((double) 4 / 5), String.valueOf((double) 5 / 6),
+                String.valueOf((double) 5 / 8), String.valueOf((double) 7 / 8)};
 
         for (int j = 0; j < searchChars.length; j++) {
             s = replace(s, searchChars[j], replacements[j]);
@@ -224,9 +225,9 @@ public class StringCalculator {
      */
     public static char[] addMultiplier(char[] input) {
         for (int i = 0; i < input.length; i++) {
-            if (contains("0123456789".toCharArray(), input[i]) && (i < input.length - 1 &&
-                    contains("(πlsct".toCharArray(), input[i + 1])) &&
-                    (!contains("log".toCharArray(), input[max(new int[]{0, 1, 2, i - 3})]))) {
+            if (contains("0123456789".toCharArray(), input[i]) &&
+                    (i < input.length - 1 && contains("(πlsct".toCharArray(), input[i + 1])) &&
+                    (input.length <= 2 || !contains("log".toCharArray(), input[max(0, 1, 2, i - 3)]))) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i + 1)).append("*").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
                 i = 0;
@@ -717,13 +718,14 @@ public class StringCalculator {
      * @param a The array of integers
      * @return The maximum value in the array
      */
-    public static int max(int[] a) {
+    public static int max(int... a) {
         if (a.length == 0) return 0;
 
         int max = a[0];
         for (int j : a) {
             if (j > max) max = j;
         }
+
         return max;
     }
 
@@ -803,8 +805,8 @@ public class StringCalculator {
     /**
      * Replaces all occurrences of a specified character in a given string with a replacement string
      *
-     * @param s The input string in which the specified character will be replaced
-     * @param exclude The character to be replaced in the input string
+     * @param s           The input string in which the specified character will be replaced
+     * @param exclude     The character to be replaced in the input string
      * @param replacement The string to replace the specified character with
      * @return A new string with all occurrences of the specified character replaced by the replacement string
      */
