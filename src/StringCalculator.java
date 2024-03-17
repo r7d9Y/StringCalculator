@@ -36,7 +36,7 @@ public class StringCalculator {
 
                     if (input.contains(commands[i])) {
                         output = infos[i];
-                        if (i == 0) output = isDEG ? "The current mode is DEG" : "The current mode is RAD";
+                        if (i == 0) output =  "The current mode is " + (isDEG ? "DEG" : "RAD");
                     }
                     System.out.println(output);
                 }
@@ -66,10 +66,10 @@ public class StringCalculator {
      
     1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,
     ( ), | |,
-    +, -, *, / (or: ÷), %, ^, !, x√(),∛, ∜ 
+    +, -, *, / (or: ÷), %, ^, !, x√(),∛, ∜\s
     ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ (potentiate symbols)
     sin(), cos(), tan(), logx()
-    E, e 
+    E, e\s
     ⅖ ¾ ⅗ ⅜ ⅘ ⅚ ⅝ ⅞ ( these symbols get converted to divisions afterwards)
     
     Please note that if you want to use a root besides the square root,
@@ -227,7 +227,7 @@ public class StringCalculator {
         for (int i = 0; i < input.length; i++) {
             if (contains("0123456789".toCharArray(), input[i]) &&
                     (i < input.length - 1 && contains("(πlsct".toCharArray(), input[i + 1])) &&
-                    (input.length <= 2 || !contains("log".toCharArray(), input[max(0, 1, 2, i - 3)]))) {
+                    (input.length == 2 || !contains("log".toCharArray(), input[max(0, 1, 2, i - 3)]))) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i + 1)).append("*").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
                 i = 0;
@@ -252,7 +252,7 @@ public class StringCalculator {
         for (int i = 0; i < input.length && String.valueOf(input).contains("π"); i++) {
             if (input[i] == 'π') {
                 StringBuilder sb = new StringBuilder();
-                input = sb.append(Arrays.copyOfRange(input, 0, max(new int[]{i, 0})))
+                input = sb.append(Arrays.copyOfRange(input, 0, max(i, 0)))
                         .append("3.141592653589793").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
             }
         }
