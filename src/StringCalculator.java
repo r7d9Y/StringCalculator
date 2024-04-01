@@ -3,7 +3,7 @@
  * entered as strings. It supports basic arithmetic operations, trigonometric functions,
  * logarithms, factorials, and more
  *
- * @version 2.3
+ * @version 2.6
  * @author Rand7Y9Z@gmail.com
  * @since 2023
  * <p>
