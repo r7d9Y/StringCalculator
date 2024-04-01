@@ -93,7 +93,7 @@ public class StringCalculator {
      */
     private static long timeItRuns = 0;
 
-    private static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
+    private static final String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
             "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated",
             "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found", "Error: no number to potentiate found"};
 
