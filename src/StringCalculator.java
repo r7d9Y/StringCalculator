@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class StringCalculator {
 
     public static String programName = "StringCalculator";
-    public static double version = 2.5;
+    public static double version = 2.6;
     private static Scanner in = new Scanner(System.in);
 
 
@@ -91,9 +91,9 @@ public class StringCalculator {
     /**
      * The time in ms the programm has been running
      */
-    public static long timeItRuns = 0;
+    private static long timeItRuns = 0;
 
-    public static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
+    private static String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
             "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated",
             "Error: factorial needs numbers", "Error: Division by 0", "Error: No closing '|' found", "Error: no number to potentiate found"};
 
@@ -178,7 +178,7 @@ public class StringCalculator {
      * @param s The input string to process
      * @return The modified string with replaced characters and converted potential format
      */
-    public static String doReplaceThings(String s) {
+    private static String doReplaceThings(String s) {
 
         char[] searchChars = {'∛', '∜', '×', '÷', '–', '–', '⅖', '¾', '⅗', '⅜', '⅘', '⅚', '⅝', '⅞'};
         String[] replacements = {"3√", "4√", "*", "/", "-", "-", String.valueOf((double) 2 / 3), String.valueOf((double) 3 / 4),
@@ -210,7 +210,7 @@ public class StringCalculator {
      * @param s The expression within the brackets as a String
      * @return The result of calculating the expression within the brackets as a String
      */
-    public static String bracketHandler(String s) {
+    private static String bracketHandler(String s) {
         if (s.length() == 2) return "";
 
         return doCalculate(s.substring(1, s.length() - 1));
@@ -223,7 +223,7 @@ public class StringCalculator {
      * @param input The input expression as a char arraylist
      * @return The input expression with added multiplication symbols if necessary as a char arraylist
      */
-    public static char[] addMultiplier(char... input) {
+    private static char[] addMultiplier(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (contains(input[i], "0123456789".toCharArray()) &&
                     (i < input.length - 1 && contains(input[i + 1], "(πlsct".toCharArray())) &&
@@ -253,7 +253,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with numerical values for 'π' and 'e' as a char array
      */
-    public static char[] clearPiAndE(char... input) {
+    private static char[] clearPiAndE(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("π"); i++) {
             if (input[i] == 'π') {
                 StringBuilder sb = new StringBuilder();
@@ -283,7 +283,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated roots as a char array
      */
-    public static char[] doRoots(char... input) {
+    private static char[] doRoots(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("√"); i++) {
             if (input[i] == '√') {
                 if (i == 0 || !"0123456789".contains(String.valueOf(input[i - 1]))) {
@@ -324,7 +324,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated logarithms as a char array
      */
-    public static char[] doLogarithm(char... input) {
+    private static char[] doLogarithm(char... input) {
         for (int i = 0; i < input.length - 2; i++) {
             if (input[i] == 'l' && input[i + 1] == 'o' && input[i + 2] == 'g') {
 
@@ -358,7 +358,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated trigonometric functions as a char array
      */
-    public static char[] doCosSinTan(char... input) {
+    private static char[] doCosSinTan(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == 's' || input[i] == 'c' || input[i] == 't') {
                 StringBuilder s = new StringBuilder().append('(');
@@ -392,7 +392,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with handled brackets as a char array
      */
-    public static char[] clearBracket(char... input) {
+    private static char[] clearBracket(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '(') {
                 StringBuilder s = new StringBuilder().append('(');
@@ -417,7 +417,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated absolute value as a char array
      */
-    public static char[] absolute(char... input) {
+    private static char[] absolute(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("|"); i++) {
             if (input[i] == '|') {
                 StringBuilder s = new StringBuilder();
@@ -442,7 +442,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated factorials as a char array
      */
-    public static char[] factorial(char... input) {
+    private static char[] factorial(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("!"); i++) {
             if (input[i] == '!') {
                 StringBuilder s = new StringBuilder();
@@ -467,7 +467,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated exponentiation as a char array
      */
-    public static char[] potentiate(char... input) {
+    private static char[] potentiate(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("^"); i++) {
             if (input[i] == '^') {
 
@@ -504,7 +504,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated multiplication, division, and modulo operations as a char array
      */
-    public static char[] multiplyDivideAndModulo(char... input) {
+    private static char[] multiplyDivideAndModulo(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '*' || input[i] == '/' || input[i] == '%') {
 
@@ -557,7 +557,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression without consecutive plus and minus signs as a char array
      */
-    public static char[] clearPlusAndMinus(char... input) {
+    private static char[] clearPlusAndMinus(char... input) {
         for (int j = 0; j < input.length - 1; j++) {
             if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' &&
                     input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
@@ -577,7 +577,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated addition and subtraction as a char array
      */
-    public static char[] addAndSubtract(char... input) {
+    private static char[] addAndSubtract(char... input) {
         for (int i = 0; i < input.length && (String.valueOf(input).contains("+") || String.valueOf(input).contains("-")); i++) {
             if ((input[i] == '+' || (input[i] == '-' && i >= 1 && (input[i - 1] != 'E' && input[i - 1] != 'e'))) && i != 0) {
                 StringBuilder s = new StringBuilder();
@@ -617,7 +617,7 @@ public class StringCalculator {
      * @param isDEG If true, the angle is in degrees; if false, the angle is in radians
      * @return The sine of the angle
      */
-    public static double sinus(double deg, boolean isDEG) {
+    private static double sinus(double deg, boolean isDEG) {
         if (deg % 180 == 0) return 0;
 
         return isDEG ? Math.sin(toRad(deg)) : Math.sin(deg);
@@ -630,7 +630,7 @@ public class StringCalculator {
      * @param isDEG If true, the angle is in degrees; if false, the angle is in radians
      * @return The cosine of the angle
      */
-    public static double cosinus(double deg, boolean isDEG) {
+    private static double cosinus(double deg, boolean isDEG) {
         return isDEG ? Math.cos(toRad(deg)) : Math.cos(deg);
     }
 
@@ -641,7 +641,7 @@ public class StringCalculator {
      * @param isDEG If true, the angle is in degrees; if false, the angle is in radians
      * @return The tangent of the angle
      */
-    public static double tangens(double deg, boolean isDEG) {
+    private static double tangens(double deg, boolean isDEG) {
         if (deg % 180 == 0) return 0;
 
         return isDEG ? Math.tan(toRad(deg)) : Math.tan(deg);
@@ -653,7 +653,7 @@ public class StringCalculator {
      * @param f The input number
      * @return The factorial of the input number
      */
-    public static double factorial(double f) {
+    private static double factorial(double f) {
         if (f >= 11) return Double.POSITIVE_INFINITY;
 
         double ret = 1;
@@ -670,7 +670,7 @@ public class StringCalculator {
      * @param n    The root degree
      * @return The n-th root of the base number
      */
-    public static double root(double base, double n) {
+    private static double root(double base, double n) {
         return Math.pow(base, 1.0 / n);
     }
 
@@ -681,7 +681,7 @@ public class StringCalculator {
      * @param n    The number to calculate the logarithm for
      * @return The logarithm of the number with the specified base
      */
-    public static double log(double base, double n) {
+    private static double log(double base, double n) {
         return Math.log(n) / Math.log(base);
     }
 
@@ -691,7 +691,7 @@ public class StringCalculator {
      * @param i The input number
      * @return The absolute value of the input number
      */
-    public static double abs(double i) {
+    private static double abs(double i) {
         return i < 0 ? i * -1 : i;
     }
 
@@ -701,7 +701,7 @@ public class StringCalculator {
      * @param i The angle in radians
      * @return The angle in degrees
      */
-    public static double toDeg(double i) {
+    private static double toDeg(double i) {
         return i * 180 / 3.141592653589793;
     }
 
@@ -711,7 +711,7 @@ public class StringCalculator {
      * @param i The angle in degrees
      * @return The angle in radians
      */
-    public static double toRad(double i) {
+    private static double toRad(double i) {
         return i * 3.141592653589793 / 180;
     }
 
@@ -721,7 +721,7 @@ public class StringCalculator {
      * @param a The array of integers
      * @return The maximum value in the array
      */
-    public static int max(int... a) {
+    private static int max(int... a) {
         if (a.length == 0) return 0;
 
         int max = a[0];
@@ -740,7 +740,7 @@ public class StringCalculator {
      * @param decimalPlaces is the number of decimal places there will be
      * @return is value rounded to x (decimal places)
      */
-    public static double roundDouble(double value, int decimalPlaces) {
+    private static double roundDouble(double value, int decimalPlaces) {
         BigDecimal bigDecimal = new BigDecimal(Double.toString(value));
         bigDecimal = bigDecimal.setScale(decimalPlaces, RoundingMode.HALF_UP);
 
@@ -754,7 +754,7 @@ public class StringCalculator {
      * @param search The character to count
      * @return The number of occurrences of the character in the string
      */
-    public static int countInstances(String s, char search) {
+    private static int countInstances(String s, char search) {
         int ret = 0;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == search) ret++;
@@ -768,7 +768,7 @@ public class StringCalculator {
      * @param s The input string
      * @return The reversed string
      */
-    public static String reverse(String s) {
+    private static String reverse(String s) {
         StringBuilder r = new StringBuilder();
         for (int i = s.length() - 1; i >= 0; i--) {
             r.append(s.charAt(i));
@@ -783,7 +783,7 @@ public class StringCalculator {
      * @param c The character to be removed
      * @return The string with all occurrences of the character removed
      */
-    public static String remove(String s, char c) {
+    private static String remove(String s, char c) {
         StringBuilder r = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) != c) r.append(s.charAt(i));
@@ -798,7 +798,7 @@ public class StringCalculator {
      * @param c The character to search for
      * @return True if the character is present, false otherwise
      */
-    public static boolean contains(char c, char... a) {
+    private static boolean contains(char c, char... a) {
         for (char value : a) {
             if (value == c) return true;
         }
@@ -813,7 +813,7 @@ public class StringCalculator {
      * @param replacement The string to replace the specified character with
      * @return A new string with all occurrences of the specified character replaced by the replacement string
      */
-    public static String replace(String s, char exclude, String replacement) {
+    private static String replace(String s, char exclude, String replacement) {
         StringBuilder r = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             r.append((s.charAt(i) == exclude) ? replacement : s.charAt(i));
