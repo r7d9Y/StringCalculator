@@ -36,7 +36,7 @@ public class StringCalculator {
 
                     if (input.contains(commands[i])) {
                         output = infos[i];
-                        if (i == 0) output =  "The current mode is " + (isDEG ? "DEG" : "RAD");
+                        if (i == 0) output = "The current mode is " + (isDEG ? "DEG" : "RAD");
                     }
                     System.out.println(output);
                 }
@@ -123,7 +123,7 @@ public class StringCalculator {
             char[] input = inp.toCharArray();
 
             for (int i = 0; i < input.length; i++) {
-                if (input[i] == '!' && (i == 0 || !contains("0123456789".toCharArray(), input[i - 1])))
+                if (input[i] == '!' && (i == 0 || !contains(input[i - 1], "0123456789".toCharArray())))
                     return listOfErrors[6];
             }
 
@@ -220,19 +220,24 @@ public class StringCalculator {
     /**
      * Adds multiplication symbols if necessary
      *
-     * @param input The input expression as a char array
-     * @return The input expression with added multiplication symbols if necessary as a char array
+     * @param input The input expression as a char arraylist
+     * @return The input expression with added multiplication symbols if necessary as a char arraylist
      */
-    public static char[] addMultiplier(char[] input) {
+    public static char[] addMultiplier(char... input) {
         for (int i = 0; i < input.length; i++) {
-            if (contains("0123456789".toCharArray(), input[i]) &&
-                    (i < input.length - 1 && contains("(πlsct".toCharArray(), input[i + 1])) &&
-                    (input.length == 2 || !contains("log".toCharArray(), input[max(0, 1, 2, i - 3)]))) {
+            if (contains(input[i], "0123456789".toCharArray()) &&
+                    (i < input.length - 1 && contains(input[i + 1], "(πlsct".toCharArray())) &&
+                    (input.length == 2 || !contains(input[max(0, 1, 2, i - 3)], "log".toCharArray()))) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i + 1)).append("*").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
                 i = 0;
             }
-            if (contains("0123456789".toCharArray(), input[i]) && (i - 1 >= 0 && contains(")π".toCharArray(), input[i - 1]))) {
+            if (contains(input[i], "0123456789".toCharArray()) && (i - 1 >= 0 && contains(input[i - 1], ")π".toCharArray()))) {
+                StringBuilder sb = new StringBuilder();
+                input = sb.append(Arrays.copyOfRange(input, 0, i)).append("*").append(Arrays.copyOfRange(input, i, input.length)).toString().toCharArray();
+                i = 0;
+            }
+            if (i > 0 && (input[i] == '(' && input[i - 1] == ')')) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i)).append("*").append(Arrays.copyOfRange(input, i, input.length)).toString().toCharArray();
                 i = 0;
@@ -248,7 +253,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with numerical values for 'π' and 'e' as a char array
      */
-    public static char[] clearPiAndE(char[] input) {
+    public static char[] clearPiAndE(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("π"); i++) {
             if (input[i] == 'π') {
                 StringBuilder sb = new StringBuilder();
@@ -278,7 +283,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated roots as a char array
      */
-    public static char[] doRoots(char[] input) {
+    public static char[] doRoots(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("√"); i++) {
             if (input[i] == '√') {
                 if (i == 0 || !"0123456789".contains(String.valueOf(input[i - 1]))) {
@@ -319,7 +324,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated logarithms as a char array
      */
-    public static char[] doLogarithm(char[] input) {
+    public static char[] doLogarithm(char... input) {
         for (int i = 0; i < input.length - 2; i++) {
             if (input[i] == 'l' && input[i + 1] == 'o' && input[i + 2] == 'g') {
 
@@ -353,7 +358,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated trigonometric functions as a char array
      */
-    public static char[] doCosSinTan(char[] input) {
+    public static char[] doCosSinTan(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == 's' || input[i] == 'c' || input[i] == 't') {
                 StringBuilder s = new StringBuilder().append('(');
@@ -387,7 +392,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with handled brackets as a char array
      */
-    public static char[] clearBracket(char[] input) {
+    public static char[] clearBracket(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '(') {
                 StringBuilder s = new StringBuilder().append('(');
@@ -412,7 +417,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated absolute value as a char array
      */
-    public static char[] absolute(char[] input) {
+    public static char[] absolute(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("|"); i++) {
             if (input[i] == '|') {
                 StringBuilder s = new StringBuilder();
@@ -437,12 +442,12 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated factorials as a char array
      */
-    public static char[] factorial(char[] input) {
+    public static char[] factorial(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("!"); i++) {
             if (input[i] == '!') {
                 StringBuilder s = new StringBuilder();
                 int j = 0;
-                for (; i - j - 1 >= 0 && contains("1234567890.".toCharArray(), (input[i - j - 1])); j++) {
+                for (; i - j - 1 >= 0 && contains((input[i - j - 1]), "1234567890.".toCharArray()); j++) {
                     s.append(input[i - j - 1]);
                 }
                 StringBuilder sb = new StringBuilder();
@@ -462,7 +467,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated exponentiation as a char array
      */
-    public static char[] potentiate(char[] input) {
+    public static char[] potentiate(char... input) {
         for (int i = 0; i < input.length && String.valueOf(input).contains("^"); i++) {
             if (input[i] == '^') {
 
@@ -499,7 +504,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated multiplication, division, and modulo operations as a char array
      */
-    public static char[] multiplyDivideAndModulo(char[] input) {
+    public static char[] multiplyDivideAndModulo(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (input[i] == '*' || input[i] == '/' || input[i] == '%') {
 
@@ -517,6 +522,7 @@ public class StringCalculator {
                 }
                 if (i - k >= 0 && input[i - k] == '-') {
                     t.append('-');
+                    k++;
                 }
 
                 StringBuilder sb = new StringBuilder();
@@ -551,7 +557,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression without consecutive plus and minus signs as a char array
      */
-    public static char[] clearPlusAndMinus(char[] input) {
+    public static char[] clearPlusAndMinus(char... input) {
         for (int j = 0; j < input.length - 1; j++) {
             if ((input[j] == '-' && input[j + 1] == '-') || (input[j] == '+' && input[j + 1] == '+') || (input[j] == '+' &&
                     input[j + 1] == '-') || (input[j] == '-' && input[j + 1] == '+')) {
@@ -571,7 +577,7 @@ public class StringCalculator {
      * @param input The input expression as a char array
      * @return The input expression with calculated addition and subtraction as a char array
      */
-    public static char[] addAndSubtract(char[] input) {
+    public static char[] addAndSubtract(char... input) {
         for (int i = 0; i < input.length && (String.valueOf(input).contains("+") || String.valueOf(input).contains("-")); i++) {
             if ((input[i] == '+' || (input[i] == '-' && i >= 1 && (input[i - 1] != 'E' && input[i - 1] != 'e'))) && i != 0) {
                 StringBuilder s = new StringBuilder();
@@ -612,9 +618,8 @@ public class StringCalculator {
      * @return The sine of the angle
      */
     public static double sinus(double deg, boolean isDEG) {
-        if (deg % 180 == 0) {
-            return 0;
-        }
+        if (deg % 180 == 0) return 0;
+
         return isDEG ? Math.sin(toRad(deg)) : Math.sin(deg);
     }
 
@@ -637,9 +642,8 @@ public class StringCalculator {
      * @return The tangent of the angle
      */
     public static double tangens(double deg, boolean isDEG) {
-        if (deg % 180 == 0) {
-            return 0;
-        }
+        if (deg % 180 == 0) return 0;
+
         return isDEG ? Math.tan(toRad(deg)) : Math.tan(deg);
     }
 
@@ -650,9 +654,8 @@ public class StringCalculator {
      * @return The factorial of the input number
      */
     public static double factorial(double f) {
-        if (f >= 11) {
-            return Double.POSITIVE_INFINITY;
-        }
+        if (f >= 11) return Double.POSITIVE_INFINITY;
+
         double ret = 1;
         for (double i = 1; i <= f; i++) {
             ret = ret * i;
@@ -795,7 +798,7 @@ public class StringCalculator {
      * @param c The character to search for
      * @return True if the character is present, false otherwise
      */
-    public static boolean contains(char[] a, char c) {
+    public static boolean contains(char c, char... a) {
         for (char value : a) {
             if (value == c) return true;
         }
