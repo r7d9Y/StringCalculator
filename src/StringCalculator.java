@@ -3,7 +3,7 @@
  * entered as strings. It supports basic arithmetic operations, trigonometric functions,
  * logarithms, factorials, and more
  *
- * @version 2.6
+ * @version 2.7
  * @author Rand7Y9Z@gmail.com
  * @since 2023
  * <p>
@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class StringCalculator {
 
     public static String programName = "StringCalculator";
-    public static double version = 2.6;
+    public static double version = 2.7;
     private static Scanner in = new Scanner(System.in);
 
 
@@ -32,24 +32,13 @@ public class StringCalculator {
 
             if (input.contains("show")) {
                 for (int i = 0; i < commands.length; i++) {
-                    String output = "";
-
-                    if (input.contains(commands[i])) {
-                        output = infos[i];
-                        if (i == 0) output = "The current mode is " + (isDEG ? "DEG" : "RAD");
-                    }
-                    System.out.println(output);
+                    if (input.contains(commands[i])) System.out.println(infos[i]);
+                    if (input.contains(commands[i])&& i == 0) System.out.println("The current mode is " + (isDEG ? "DEG" : "RAD"));
                 }
-            } else if (input.equalsIgnoreCase("Rad")) {
-                isDEG = false;
-            } else if (input.equalsIgnoreCase("Deg")) {
-                isDEG = true;
-            } else if (input.equalsIgnoreCase("end") || input.equalsIgnoreCase("close")) {
-                System.out.println("Program closed");
-                break;
-            } else {
-                System.out.println(doCalculate(input));
-            }
+            } else if (input.equalsIgnoreCase("Rad")) isDEG = false;
+            else if (input.equalsIgnoreCase("Deg")) isDEG = true;
+            else if (input.equalsIgnoreCase("end") || input.equalsIgnoreCase("close")) break;
+            else System.out.println(doCalculate(input));
         }
 
 
@@ -64,12 +53,13 @@ public class StringCalculator {
     For a list of possible commands, type 'show - commands', to close the programm type 'end'
     Here is a list of symbols/characters it can Handle:
      
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π ,
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ., π , PI
     ( ), | |,
-    +, -, *, / (or: ÷), %, ^, !, x√(),∛, ∜\s
+    +, - (or –, – , the same characters can be used to display negative numbers) , *, / (or: ÷)
+    %, ^, !, x√(),∛, ∜\s
     ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ (potentiate symbols)
-    sin(), cos(), tan(), logx()
-    E, e\s
+    sin(), cos(), tan(), logx()  -   as well as their arc equivalents
+    E ( x*10^y)\s
     ⅖ ¾ ⅗ ⅜ ⅘ ⅚ ⅝ ⅞ ( these symbols get converted to divisions afterwards)
     
     Please note that if you want to use a root besides the square root,
@@ -91,7 +81,7 @@ public class StringCalculator {
     /**
      * The time in ms the programm has been running
      */
-    private static long timeItRuns = 0;
+    private static long timeItRuns;
 
     private static final String[] listOfErrors = new String[]{"Error: Calculation", "Error: Brackets", "Error: Overflow",
             "Error: Input exceeds limit", "Error: Calculation timed out", "Error: Input can't be calculated",
@@ -105,16 +95,12 @@ public class StringCalculator {
      * they should be self explaining)
      */
     public static String doCalculate(String inp) {
+        long time = System.currentTimeMillis();
         try {
-            long time = System.currentTimeMillis();
 
             inp = remove(inp, '_');
             inp = remove(inp, ' ');
             inp = remove(inp, '"');
-            //inp = replace(inp,',',".");
-
-            inp = doReplaceThings(inp);
-            if (inp.equals(listOfErrors[9])) return listOfErrors[9];
 
             if (countInstances(inp, '(') != countInstances(inp, ')')) return listOfErrors[1];
 
@@ -128,6 +114,9 @@ public class StringCalculator {
             }
 
             input = addMultiplier(input);
+
+            input = doReplaceThings(input);
+            if (new String(input).equals(listOfErrors[9])) return listOfErrors[9];
 
             input = clearPiAndE(input);
 
@@ -168,17 +157,18 @@ public class StringCalculator {
 
         } catch (Exception e) {
             return listOfErrors[5];
+        } finally {
+            timeItRuns = System.currentTimeMillis() - time;
         }
     }
 
     /**
-     * Replaces special characters in a given string with their corresponding mathematical expressions,
-     * and converts potential characters to a format compatible with the potentiate operator (^)
+     * replaces special characters with their respective numerical values or expressions
      *
-     * @param s The input string to process
-     * @return The modified string with replaced characters and converted potential format
+     * @param input The input expression as a char array
+     * @return the input expression with special characters replaced by numerical values and expressions as a char array
      */
-    private static String doReplaceThings(String s) {
+    private static char[] doReplaceThings(char[] input) {
 
         char[] searchChars = {'∛', '∜', '×', '÷', '–', '–', '⅖', '¾', '⅗', '⅜', '⅘', '⅚', '⅝', '⅞'};
         String[] replacements = {"3√", "4√", "*", "/", "-", "-", String.valueOf((double) 2 / 3), String.valueOf((double) 3 / 4),
@@ -186,21 +176,24 @@ public class StringCalculator {
                 String.valueOf((double) 5 / 8), String.valueOf((double) 7 / 8)};
 
         for (int j = 0; j < searchChars.length; j++) {
-            s = replace(s, searchChars[j], replacements[j]);
+            input = replace(new String(input), searchChars[j], replacements[j]).toCharArray();
         }
 
         char[] potentiateDigits = new char[]{'⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'};
 
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < potentiateDigits.length; j++) {
-                if (s.charAt(i) == potentiateDigits[j]) {
-                    if (i == 0) return listOfErrors[9];
-                    s = s.substring(0, i) + "^" + j + s.substring(i + 1);
+                if (input[i] == potentiateDigits[j]) {
+                    if (i == 0) return listOfErrors[9].toCharArray();
+                    input[i] = (char) (j + '0');
+                    if ((i > 0) && (input[i - 1] != '^')) {
+                        input[i - 1] = '^';
+                    }
                 }
             }
         }
 
-        return s;
+        return new String(input).replace("arc", "1/").replace("PI", "π").replace("∛", "3√").replace("∜", "4√").toCharArray();
     }
 
 
@@ -226,7 +219,7 @@ public class StringCalculator {
     private static char[] addMultiplier(char... input) {
         for (int i = 0; i < input.length; i++) {
             if (contains(input[i], "0123456789".toCharArray()) &&
-                    (i < input.length - 1 && contains(input[i + 1], "(πlsct".toCharArray())) &&
+                    (i < input.length - 1 && contains(input[i + 1], "(πlasct".toCharArray())) &&
                     (input.length == 2 || !contains(input[max(0, 1, 2, i - 3)], "log".toCharArray()))) {
                 StringBuilder sb = new StringBuilder();
                 input = sb.append(Arrays.copyOfRange(input, 0, i + 1)).append("*").append(Arrays.copyOfRange(input, i + 1, input.length)).toString().toCharArray();
