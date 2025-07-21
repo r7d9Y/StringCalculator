@@ -1,6 +1,4 @@
 <h1>StringCalculator</h1>
-Note: this migth be outdated, for more info please look into the source code<br>
-The StringCalculator program is a terminal based calculator that can evaluate various mathematical expressions entered as strings. It supports a wide range of mathematical expressions, including basic arithmetic operations, trigonometric functions, logarithms, factorials, and more.
 
 <h2>Version Information</h2>
 • Version: 2.2 <br>
